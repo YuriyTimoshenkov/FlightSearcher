@@ -14,9 +14,6 @@ import DomainModel.services
 class ItineraryController(Controllers.baseController.BaseHandler):
     @gen.coroutine
     def initialize(self, itinerary_service, json_encoder, auth_key):
-        # self.bookingRepository = bookingRepository.BookingRepository()
-        #
-        # yield self.bookingRepository.initDB()
         self.itinerary_service = itinerary_service
         self.json_encoder = json_encoder
         self.rsa_key_string = auth_key
