@@ -1,3 +1,6 @@
+import uuid
+
+
 class Itinerary:
     def __init__(self):
         self.Id = None
@@ -27,6 +30,11 @@ class ItinerarySearchRequest:
         self.departure_date = departure_date
         self.return_date = return_date
         self.round_trip = round_trip
+
+
+class ItinerarySearchResult(Itinerary):
+    def __init__(self):
+        self.search_id = str(uuid.uuid4())
 
 
 class ItineraryState:

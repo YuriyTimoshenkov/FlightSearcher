@@ -13,10 +13,11 @@ import DomainModel.services
 
 class ItineraryController(Controllers.baseController.BaseHandler):
     @gen.coroutine
-    def initialize(self, itinerary_service, json_encoder, auth_key):
+    def initialize(self, itinerary_service, json_encoder, auth_key, logger):
         self.itinerary_service = itinerary_service
         self.json_encoder = json_encoder
         self.rsa_key_string = auth_key
+        self.logger = logger
 
     @gen.coroutine
     def get(self):

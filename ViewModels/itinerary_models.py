@@ -3,6 +3,7 @@ import Common
 import DomainModel.models
 import utils.json_datetime_encoder
 import json
+import  sys
 
 
 class ItinerarySearchViewModel:
@@ -14,7 +15,8 @@ class ItinerarySearchViewModel:
             self.return_date = request_arguments['return_date']
             self.round_trip = request_arguments['round_trip']
         except:
-            raise Common.Exceptions.ValidationModelException('ItinerarySearchViewModel validation error')
+            raise Common.exceptions.ValidationModelException('ItinerarySearchViewModel validation error. Details: {}'
+                                                             .format(sys.exc_info()[0]))
 
     def to_domain_model(self):
         result = DomainModel.models.ItinerarySearchRequest(

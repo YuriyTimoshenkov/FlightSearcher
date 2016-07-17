@@ -7,8 +7,8 @@ class GDSServiceAdapterMock:
     def search(self, itinerary_search_request):
         parsed_response = json.loads(GDSServiceAdapterMock.mocked_gds_response)
 
-        dd = parsed_response['PricedItineraries']
-        result = list(map(GDSServiceAdapterMock.parse_priced_itinerary, dd))
+        itineraries = parsed_response['PricedItineraries']
+        result = list(map(GDSServiceAdapterMock.parse_priced_itinerary, itineraries))
 
         return result
 
@@ -17,7 +17,7 @@ class GDSServiceAdapterMock:
 
     @staticmethod
     def parse_priced_itinerary(priced_itinerary):
-        result = DomainModel.models.Itinerary()
+        result = DomainModel.models.ItinerarySearchResult()
         result.BookingDate = datetime.datetime.now()
         result.Owner = "None"
 

@@ -8,22 +8,33 @@ import Adapters.itinerary_sql_repository
 import utils.json_datetime_encoder
 from tornado.options import options
 import settings
+import logging
+import logging.config
+
+logging.config.fileConfig('logging.conf')
 
 
 def make_app():
-    return tornado.web.Application([
+    app = tornado.web.Application([
         (
             r"/api/itinerary",
             Controllers.itinerary_controller.ItineraryController,
             dict(
                 itinerary_service=DomainModel.services.ItineraryService(
                     Adapters.gds_service_adapter.GDSServiceAdapterMock(),
-                    Adapters.itinerary_sql_repository.ItinerarySqlRepository(options.dbConnectionString)),
+                    Adapters.itinerary_sql_repository.ItinerarySqlRepository(options.dbConnectionString),
+                    logging.getLogger('FSLogger'),
+                    utils.json_datetime_encoder.ComplexEncoder()),
                 json_encoder=utils.json_datetime_encoder.ComplexEncoder(),
-                auth_key=options.authKey
+                auth_key=options.authKey,
+                logger=logging.getLogger('FSLogger')
             )),
         (r"/api/auth", Controllers.authenticationController.AuthenticationHandler),
     ], cookie_secret="MY_SECRET_COOKIE_KEY")
+
+    app.logger = logging.getLogger('FSLogger')
+
+    return app
 
 
 def main():
@@ -33,6 +44,9 @@ def main():
     app = make_app()
 
     app.listen(8886)
+
+    app.logger.info('Application lunched.')
+
     tornado.ioloop.IOLoop.current().start()
 
 if __name__ == "__main__":
