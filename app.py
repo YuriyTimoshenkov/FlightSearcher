@@ -21,7 +21,7 @@ def make_app():
             Controllers.itinerary_controller.ItineraryController,
             dict(
                 itinerary_service=DomainModel.services.ItineraryService(
-                    Adapters.gds_service_adapter.GDSServiceAdapterMock(),
+                    Adapters.gds_service_adapter.SabreGDSServiceAdapterMock(),
                     Adapters.itinerary_sql_repository.ItinerarySqlRepository(options.dbConnectionString),
                     logging.getLogger('FSLogger'),
                     utils.json_datetime_encoder.ComplexEncoder()),
