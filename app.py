@@ -1,10 +1,12 @@
 import tornado.ioloop
 import tornado.web
 import Controllers.itinerary_controller
-import Controllers.authenticationController
+import Controllers.authentication_controller
+import Controllers.airports_controller
 import DomainModel.services
 import Adapters.gds_service_adapter
 import Adapters.itinerary_sql_repository
+import Adapters.airports_repository
 import utils.json_datetime_encoder
 from tornado.options import options
 import settings
@@ -21,7 +23,7 @@ def make_app():
             Controllers.itinerary_controller.ItineraryController,
             dict(
                 itinerary_service=DomainModel.services.ItineraryService(
-                    Adapters.gds_service_adapter.SabreGDSServiceAdapterMock(),
+                    Adapters.gds_service_adapter.SabreGDSServiceAdapter(Adapters.gds_service_adapter.SabreProxyMock),
                     Adapters.itinerary_sql_repository.ItinerarySqlRepository(options.dbConnectionString),
                     logging.getLogger('FSLogger'),
                     utils.json_datetime_encoder.ComplexEncoder()),
@@ -29,7 +31,13 @@ def make_app():
                 auth_key=options.authKey,
                 logger=logging.getLogger('FSLogger')
             )),
-        (r"/api/auth", Controllers.authenticationController.AuthenticationHandler),
+        (r"/api/auth", Controllers.authentication_controller.AuthenticationHandler),
+        (
+            r"/api/lookup/airports/query/([A-Z]+)", Controllers.airports_controller.AirportsController,
+            dict(
+                airports_repository = Adapters.airports_repository.AirportsRepository(options.airportSourceAuthKey, options.airportsSourceUrl)
+            )
+        )
     ], cookie_secret="MY_SECRET_COOKIE_KEY")
 
     app.logger = logging.getLogger('FSLogger')

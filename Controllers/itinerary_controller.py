@@ -2,7 +2,7 @@ import tornado
 import tornado.httpclient
 import tornado.template
 import Common.authdecorator
-import Controllers.baseController
+import Controllers.base_controller
 import ViewModels.itinerary_models
 import utils.json_datetime_encoder
 from Common.exceptions import  ValidationModelException
@@ -11,7 +11,7 @@ from tornado import gen
 import DomainModel.services
 
 
-class ItineraryController(Controllers.baseController.BaseHandler):
+class ItineraryController(Controllers.base_controller.BaseHandler):
     @gen.coroutine
     def initialize(self, itinerary_service, json_encoder, auth_key, logger):
         self.itinerary_service = itinerary_service
